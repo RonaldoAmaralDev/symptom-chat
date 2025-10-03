@@ -8,8 +8,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY app ./app
-COPY data ./data
-COPY .env.example ./.env   # 👈 copia o example como .env por padrão
+COPY .env.example ./.env
 
 EXPOSE 8088
 
