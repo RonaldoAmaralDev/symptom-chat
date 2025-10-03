@@ -1,0 +1,75 @@
+# ==============================
+# Python / FastAPI
+# ==============================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+*.egg-info/
+*.log
+
+# Virtualenv
+.env
+.venv/
+env/
+venv/
+
+# Cache / coverage
+.mypy_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ==============================
+# Node / Vue (Vite)
+# ==============================
+node_modules/
+dist/
+*.log
+*.lock
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Local env
+frontend/.env
+frontend/.env.local
+
+# ==============================
+# Docker
+# ==============================
+.dockerignore
+docker-compose.override.yml
+docker-compose.dev.yml
+
+# Volumes e cache do Docker
+volumes/
+*.pid
+
+# ==============================
+# Editor / IDE
+# ==============================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ==============================
+# Outras configs
+# ==============================
+# Arquivos de ambiente (API)
+api/.env
+api/.env.local
+api/.env.*.local
+
+# Logs gerais
+logs/
+*.sqlite3
+
+# ==============================
+# Build e artefatos extras
+# ==============================
+build/
+tmp/
