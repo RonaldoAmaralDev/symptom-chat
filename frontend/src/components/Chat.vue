@@ -1,12 +1,10 @@
 <template>
   <div class="chat">
-    <!-- Top bar -->
     <header class="chat-header">
       <h2>💬 Chat</h2>
       <button class="reset" @click="resetSession">🗑 Resetar conversa</button>
     </header>
 
-    <!-- Histórico -->
     <main class="chat-history" ref="scroller">
       <div
         v-for="(m, i) in messages"
@@ -20,11 +18,10 @@
         </div>
       </div>
 
-      <div v-if="loading" class="status">Gerando resposta…</div>
+      <div v-if="loading" class="status">✍️ Digitando…</div>
       <div v-if="error" class="error">Erro: {{ error }}</div>
     </main>
 
-    <!-- Input -->
     <footer class="chat-input">
       <input
         v-model="input"
@@ -39,7 +36,6 @@
 
 <script setup>
 import { ref, nextTick } from "vue";
-import axios from "axios";
 
 const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:8088";
 
@@ -58,25 +54,54 @@ const scrollToBottom = async () => {
 
 const send = async () => {
   if (!input.value || loading.value) return;
+
   const userText = input.value.trim();
   input.value = "";
   messages.value.push({ role: "user", content: userText });
+
+  const aiMsg = { role: "assistant", content: "" };
+  messages.value.push(aiMsg);
+
   scrollToBottom();
+  loading.value = true;
+  error.value = "";
 
   try {
-    loading.value = true;
-    const res = await axios.post(`${API_BASE}/chat`, {
-      session_id: sessionId,
-      message: userText,
+    const response = await fetch(`${API_BASE}/chat/stream`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ session_id: sessionId, message: userText }),
     });
 
-    messages.value.push({
-      role: "assistant",
-      content: res.data?.answer || "(sem resposta)",
-    });
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder("utf-8");
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      const chunk = decoder.decode(value, { stream: true });
+      chunk.split("\n\n").forEach((line) => {
+        if (line.startsWith("data:")) {
+          const token = line.replace("data:", "").trim();
+      if (token) {
+        if (
+          aiMsg.content &&
+          !aiMsg.content.endsWith(" ") &&
+          !token.startsWith(" ") &&
+          !",.!?".includes(token)
+        ) {
+          aiMsg.content += " ";
+        }
+        aiMsg.content += token;
+        scrollToBottom();
+      }
+        }
+      });
+    }
   } catch (e) {
-    error.value = e?.response?.data?.detail || e?.message;
-    messages.value.push({ role: "assistant", content: "Ops, erro ao responder." });
+    error.value = e.message || "Erro inesperado.";
+    aiMsg.content = "❌ Erro ao gerar resposta.";
   } finally {
     loading.value = false;
     scrollToBottom();
@@ -85,7 +110,7 @@ const send = async () => {
 
 const resetSession = async () => {
   try {
-    await axios.delete(`${API_BASE}/session/${sessionId}`);
+    await fetch(`${API_BASE}/session/${sessionId}`, { method: "DELETE" });
   } catch (_) {}
   messages.value = [];
   error.value = "";
