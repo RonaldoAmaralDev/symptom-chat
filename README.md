@@ -1,77 +1,82 @@
-# 🤖 RAG Symptom Chat (FastAPI + Vue + Redis + Chroma + Ollama)
+# 🤖 Symptom Chat – RAG com FastAPI + Vue + Ollama + Redis + Chroma
 
-> **Aviso importante:** Este projeto é apenas para **informação** e **educação**. Não fornece diagnóstico nem prescrição. Sempre consulte um médico.
+![Python](https://img.shields.io/badge/Python-3.11-blue)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.115-green)
+![Vue](https://img.shields.io/badge/Vue-3.x-brightgreen)
+![Docker](https://img.shields.io/badge/Docker-Ready-blue)
+![Redis](https://img.shields.io/badge/Redis-7-red)
+![Chroma](https://img.shields.io/badge/ChromaDB-RAG-orange)
 
----
+Chat inteligente que interpreta **sintomas** e sugere **ações/produtos** usando **RAG (Retrieval Augmented Generation)** com **Llama 3.2 (3B)** rodando no **Ollama**.
 
-## 📦 Stack
-- **Backend:** FastAPI + LangChain + ChromaDB + Redis
-- **Frontend:** Vue 3 + Vite + Tailwind + Chart.js
-- **LLM:** Ollama (Llama 3.x)
-- **Infra:** Docker Compose (WSL2)
-
----
-
-## ▶️ Como rodar
-
-### 1. Clonar projeto
-```bash
-git clone <repo>
-cd rag-symptom-chat
-```
-
-### 2. Subir containers
-```bash
-docker compose up -d --build
-```
-
-### 3. Baixar modelos no Ollama
-```bash
-✅ Os modelos **llama3.2:3b (~3.8GB)** e **nomic-embed-text** já são baixados automaticamente no `docker compose up`.
-```
-
-### 4. Acessar
-- **Chat:** [http://localhost:5173](http://localhost:5173)  
-- **Dashboard:** [http://localhost:5173/dashboard](http://localhost:5173/dashboard)  
-- **Receita Médica:** [http://localhost:5173/receita](http://localhost:5173/receita)  
+> ⚠️ Este projeto é apenas **educacional**. Não fornece diagnóstico médico.
 
 ---
 
-## 💬 Funcionalidades
+## 🚀 Como rodar com Docker (WSL2)
 
-### Chat
+```bash
+git clone https://github.com/RonaldoAmaralDev/symptom-chat.git
+cd symptom-chat
+docker compose up --build
+```
+
+👉 O navegador abrirá automaticamente em **http://localhost:5173**
+
+---
+
+## 📚 Funcionalidades
+
+### 💬 Chat
 - Conversa em tempo real (WebSocket)
+- Memória persistida no Redis
 - Sugestões de **produtos** e **ações**
 - Detecção de **red flags**
 - Exibição de **fontes consultadas**
 - Botão **Resetar conversa**
 
-### Dashboard
+### 📊 Dashboard
 - Perguntas mais feitas
 - Produtos mais sugeridos
 - Tempo médio de resposta
 - Quantidade de erros
 - Custos de transação
-- Gráficos com Chart.js (barras, linha)
+- Gráficos com **Chart.js** (barras + linhas)
 
-### Receita Médica
+### 📄 Receita Médica
 - Upload de imagem/PDF da receita
-- OCR com Tesseract
+- OCR com **Tesseract**
 - Explicação dos medicamentos prescritos
 - Sugestão de próximos passos (cuidados, onde comprar)
 
 ---
 
-## 🚀 Melhorias futuras
-- Exportar métricas em CSV/Excel
-- Mais integrações no módulo de receita (farmácias online, APIs médicas)
-- Alertas customizados por paciente
-- Agendamento médico direto pelo sistema
+## 🛠️ Stack
+
+- **Backend:** FastAPI + LangChain + Redis + ChromaDB  
+- **Frontend:** Vue 3 + Vite + Tailwind + Chart.js  
+- **LLM:** Ollama (Llama 3.2 3B, ~3.8GB)  
+- **Infra:** Docker Compose (WSL2/Linux)  
 
 ---
 
-## ⚡ Notas
-- Desenvolvido para rodar no **WSL2 + Docker**.
-- Backend em **Python 3.11**, Frontend em **Node 20**.
-- Recomendado ter pelo menos **8GB de RAM** disponível para Ollama + Chroma.
+## 🗺 Melhorias Futuras
 
+- Exportar métricas em CSV/Excel  
+- Integração com APIs de farmácias  
+- Alertas customizados por paciente  
+- Agendamento médico integrado  
+
+---
+
+## 📸 Screenshots (em breve)
+
+- Chat em tempo real  
+- Dashboard com métricas  
+- Receita médica analisada  
+
+---
+
+## ✨ Autor
+
+Desenvolvido por [**Ronaldo Amaral**](https://github.com/RonaldoAmaralDev) 🚀
