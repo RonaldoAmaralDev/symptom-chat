@@ -2,7 +2,7 @@
   <div class="chat">
     <header class="chat-header">
       <h2>💬 Chat</h2>
-      <button class="reset" @click="resetSession">🗑 Resetar conversa</button>
+      <button class="reset" @click="resetSession">🗑 Limpar conversa</button>
     </header>
 
     <main class="chat-history" ref="scroller">
@@ -19,7 +19,6 @@
       </div>
 
       <div v-if="loading" class="status">✍️ Digitando…</div>
-      <div v-if="error" class="error">Erro: {{ error }}</div>
     </main>
 
     <footer class="chat-input">
@@ -35,21 +34,25 @@
 </template>
 
 <script setup>
-import { ref, nextTick } from "vue";
-
-const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:8088";
+import { ref, nextTick, onMounted, watchEffect } from "vue";
+import { sendMessage, resetChat } from "@/services/chatService";
+import { toast } from "vue3-toastify";
+import { getSession } from "../services/chatService";
 
 const messages = ref([]);
 const input = ref("");
 const loading = ref(false);
-const error = ref("");
 const scroller = ref(null);
 
 const sessionId = "demo-1";
 
 const scrollToBottom = async () => {
   await nextTick();
-  if (scroller.value) scroller.value.scrollTop = scroller.value.scrollHeight;
+  setTimeout(() => {
+    if (scroller.value) {
+      scroller.value.scrollTop = scroller.value.scrollHeight;
+    }
+  }, 0);
 };
 
 const send = async () => {
@@ -64,44 +67,24 @@ const send = async () => {
 
   scrollToBottom();
   loading.value = true;
-  error.value = "";
 
   try {
-    const response = await fetch(`${API_BASE}/chat/stream`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ session_id: sessionId, message: userText }),
-    });
-
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder("utf-8");
-
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-
-      const chunk = decoder.decode(value, { stream: true });
-      chunk.split("\n\n").forEach((line) => {
-        if (line.startsWith("data:")) {
-          const token = line.replace("data:", "").trim();
-      if (token) {
-        if (
-          aiMsg.content &&
-          !aiMsg.content.endsWith(" ") &&
-          !token.startsWith(" ") &&
-          !",.!?".includes(token)
-        ) {
-          aiMsg.content += " ";
-        }
-        aiMsg.content += token;
-        scrollToBottom();
+    await sendMessage(sessionId, userText, (token) => {
+      if (
+        aiMsg.content &&
+        !aiMsg.content.endsWith(" ") &&
+        !token.startsWith(" ") &&
+        !",.!?".includes(token)
+      ) {
+        aiMsg.content += " ";
       }
-        }
-      });
-    }
+      aiMsg.content += token;
+
+      scrollToBottom();
+    });
   } catch (e) {
-    error.value = e.message || "Erro inesperado.";
-    aiMsg.content = "❌ Erro ao gerar resposta.";
+    toast.error(e.message || "Erro inesperado 🚨");
+    aiMsg.content = "❌ Ocorreu um erro ao gerar resposta.";
   } finally {
     loading.value = false;
     scrollToBottom();
@@ -110,9 +93,25 @@ const send = async () => {
 
 const resetSession = async () => {
   try {
-    await fetch(`${API_BASE}/session/${sessionId}`, { method: "DELETE" });
+    await resetChat(sessionId);
   } catch (_) {}
   messages.value = [];
-  error.value = "";
 };
+
+onMounted(async () => {
+  try {
+    const history = await getSession(sessionId);
+    messages.value = history.messages;
+
+    await nextTick();
+    scrollToBottom();
+  } catch (e) {
+    console.error("Erro ao carregar histórico:", e);
+  }
+});
+
+watchEffect(async () => {
+  await nextTick();
+  scrollToBottom();
+});
 </script>

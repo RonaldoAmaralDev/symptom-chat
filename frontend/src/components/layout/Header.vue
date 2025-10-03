@@ -4,6 +4,7 @@
       <h1 class="brand">💊 Symptom Chat</h1>
       <nav class="links">
         <router-link to="/" exact>Chat</router-link>
+        <router-link to="/agent">Agente</router-link>
         <router-link to="/dashboard">Dashboard</router-link>
         <router-link to="/receita">Receita Médica</router-link>
       </nav>
