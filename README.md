@@ -22,7 +22,7 @@ cp api/.env.example api/.env
 docker compose up --build
 ```
 
-👉 O navegador abrirá automaticamente em **http://localhost:5173**
+👉 O navegador deve ser aberto em: **http://localhost:5173**
 
 ---
 

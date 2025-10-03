@@ -8,5 +8,4 @@ COPY . .
 
 EXPOSE 5173
 
-# Executa o Vite e abre o navegador automaticamente
-CMD sh -c "npm run dev -- --host & sleep 5 && xdg-open http://localhost:5173 || true && wait"
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]

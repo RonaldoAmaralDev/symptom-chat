@@ -3,7 +3,7 @@ import Chat from './components/Chat.vue'
 import Dashboard from './components/Dashboard.vue'
 import Receita from './components/Receita.vue'
 
-export default createRouter({
+const router = createRouter({
   history: createWebHistory(),
   routes: [
     { path: '/', component: Chat },
@@ -11,3 +11,5 @@ export default createRouter({
     { path: '/receita', component: Receita }
   ]
 })
+
+export default router
