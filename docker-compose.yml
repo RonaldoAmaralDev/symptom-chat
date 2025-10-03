@@ -30,6 +30,19 @@ services:
     ports:
       - "6379:6379"
 
+  db:
+    image: postgres:15
+    container_name: symptom_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: symptom_chat
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
   api:
     build:
       context: ./api
@@ -46,8 +59,13 @@ services:
         condition: service_started
       redis:
         condition: service_started
+      db:
+        condition: service_started
     volumes:
-      - ./:/app
+      - ./api/app:/app/app
+      - ./api/alembic:/app/alembic
+      - ./api/alembic.ini:/app/alembic.ini
+      - ./api/requirements.txt:/app/requirements.txt
 
   frontend:
     build:
@@ -67,3 +85,4 @@ services:
 volumes:
   ollama_data:
   chroma_data:
+  postgres_data:

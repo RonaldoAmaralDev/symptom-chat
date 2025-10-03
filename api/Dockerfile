@@ -2,15 +2,25 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y tesseract-ocr libtesseract-dev python3-opencv && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    build-essential \
+    libpq-dev \
+    libffi-dev \
+    libssl-dev \
+    libtesseract-dev \
+    tesseract-ocr \
+    curl \
+ && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel \
+ && pip install --no-cache-dir -r requirements.txt
 
-COPY . /app
+COPY . .
 
-WORKDIR /app/api
+RUN chmod +x /app/entrypoint.sh
 
 EXPOSE 8088
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8088", "--reload"]
+CMD ["/app/entrypoint.sh"]

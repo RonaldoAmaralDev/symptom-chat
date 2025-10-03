@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api import status, chat
+from app.api import status, chat, agents
 
 app = FastAPI(title="Symptom Chat API")
 
@@ -12,5 +12,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(status.router, tags=["status"])
-app.include_router(chat.router, tags=["chat"])
+app.include_router(status.router, prefix="/api/v1", tags=["status"])
+app.include_router(chat.router, prefix="/api/v1", tags=["chat"])
+app.include_router(agents.router, prefix="/api/v1", tags=["Agents"])

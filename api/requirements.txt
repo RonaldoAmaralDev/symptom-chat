@@ -11,3 +11,6 @@ websockets==12.0
 redis==5.0.8
 pytesseract==0.3.13
 Pillow==10.4.0
+alembic
+asyncpg
+psycopg2-binary

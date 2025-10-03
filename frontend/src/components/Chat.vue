@@ -35,9 +35,8 @@
 
 <script setup>
 import { ref, nextTick, onMounted, watchEffect } from "vue";
-import { sendMessage, resetChat } from "@/services/chatService";
+import { sendMessage, resetChat, getSession } from "@/services/chat";
 import { toast } from "vue3-toastify";
-import { getSession } from "../services/chatService";
 
 const messages = ref([]);
 const input = ref("");

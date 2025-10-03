@@ -4,6 +4,7 @@ import router from './router'
 
 import './assets/app.css'
 import './assets/chat.css'
+import './assets/agent.css'
 
 import "vue3-toastify/dist/index.css";
 import Vue3Toastify from "vue3-toastify";
