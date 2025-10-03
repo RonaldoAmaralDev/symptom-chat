@@ -1,0 +1,1 @@
+<template><div>Dashboard.vue placeholder</div></template>

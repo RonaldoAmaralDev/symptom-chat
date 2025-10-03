@@ -1,0 +1,1 @@
+<template><div>Chat.vue placeholder</div></template>

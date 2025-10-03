@@ -1,0 +1,59 @@
+version: "3.8"
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    command: >
+      sh -c "
+        ollama pull llama3.2:3b &&
+        ollama pull nomic-embed-text:latest &&
+        ollama serve
+      "
+
+  chroma:
+    image: chromadb/chroma:latest
+    container_name: chroma
+    ports:
+      - "8001:8000"
+    volumes:
+      - chroma_data:/chroma
+
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+  api:
+    build:
+      context: .
+      dockerfile: api.Dockerfile
+    container_name: rag-api
+    env_file:
+      - .env
+    ports:
+      - "8088:8088"
+    depends_on:
+      - ollama
+      - chroma
+      - redis
+    volumes:
+      - ./:/app
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: frontend.Dockerfile
+    container_name: rag-frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - api
+
+volumes:
+  ollama_data:
+  chroma_data:
