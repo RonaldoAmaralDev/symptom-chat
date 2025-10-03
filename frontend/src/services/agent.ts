@@ -16,3 +16,13 @@ export async function listAgents(): Promise<Agent[]> {
   const { data } = await api.get<Agent[]>("/agents");
   return data;
 }
+
+export async function toggleAgent(id: number) {
+  const { data } = await api.put(`/agents/${id}/toggle`);
+  return data;
+}
+
+export async function updateAgent(id: number, payload: Partial<Agent>) {
+  const { data } = await api.put(`/agents/${id}`, payload);
+  return data;
+}

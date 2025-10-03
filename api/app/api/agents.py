@@ -12,3 +12,8 @@ async def list_agents(session: AsyncSession = Depends(get_db)):
 @router.put("/agents/{agent_id}/toggle")
 async def toggle_agent(agent_id: int, session: AsyncSession = Depends(get_db)):
     return await AgentService.toggle_agent(agent_id, session)
+
+
+@router.put("/agents/{agent_id}")
+async def update_agent(agent_id: int, data: dict, session: AsyncSession = Depends(get_db)):
+    return await AgentService.update_agent(agent_id, data, session)
