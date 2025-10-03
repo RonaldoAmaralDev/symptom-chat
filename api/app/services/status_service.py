@@ -16,9 +16,9 @@ def check_status():
     except Exception:
         pass
 
-    # Chroma
+    # Chroma (v2)
     try:
-        resp = requests.get(f"{config.CHROMA_URL}/api/v1/heartbeat", timeout=2)
+        resp = requests.get(f"{config.CHROMA_URL}/api/v2/heartbeat", timeout=2)
         if resp.status_code == 200:
             status_info["chroma"] = True
     except Exception:
