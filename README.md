@@ -19,6 +19,7 @@ Chat inteligente que interpreta **sintomas** e sugere **ações/produtos** usand
 git clone https://github.com/RonaldoAmaralDev/symptom-chat.git
 cd symptom-chat
 cp api/.env.example api/.env
+cp frontend/.env.example frontend/.env
 docker compose up --build
 ```
 
