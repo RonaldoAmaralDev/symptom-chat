@@ -76,3 +76,16 @@
   opacity: .6;
   cursor: not-allowed;
 }
+
+.agent-select {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-right: 15px;
+}
+
+.agent-select select {
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}

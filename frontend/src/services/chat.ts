@@ -3,12 +3,17 @@ const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8088/api/v1";
 export async function sendMessage(
   sessionId: string,
   userText: string,
+  agentId: number,
   onChunk: (token: string) => void
 ) {
   const response = await fetch(`${API_BASE}/chat/stream`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ session_id: sessionId, message: userText }),
+    body: JSON.stringify({
+      session_id: sessionId,
+      message: userText,
+      agent_id: agentId,
+    }),
   });
 
   if (!response.ok || !response.body) {
