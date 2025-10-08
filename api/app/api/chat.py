@@ -1,19 +1,18 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
 from app.schemas.chat_schema import ChatRequest
 from app.services.chat_service import chat_stream, reset_session
 from app.core import config
+from app.db import get_db
+from sqlalchemy.ext.asyncio import AsyncSession
 
 r = config.redis_client
 router = APIRouter()
 
 @router.post("/chat/stream")
-def chat(req: ChatRequest):
-    """
-    Retorna resposta em streaming (SSE).
-    """
+def chat(req: ChatRequest, session: AsyncSession = Depends(get_db)):
     return StreamingResponse(
-        chat_stream(req.session_id, req.message),
+        chat_stream(session, req.session_id, req.message, req.agent_id),
         media_type="text/event-stream"
     )
 
