@@ -1,3 +1,4 @@
+
 # 🤖 Symptom Chat – RAG com FastAPI + Vue + Ollama + Redis + Chroma
 
 ![Python](https://img.shields.io/badge/Python-3.11-blue)
@@ -7,9 +8,9 @@
 ![Redis](https://img.shields.io/badge/Redis-7-red)
 ![Chroma](https://img.shields.io/badge/ChromaDB-RAG-orange)
 
-Chat inteligente que interpreta **sintomas** e sugere **ações/produtos** usando **RAG (Retrieval Augmented Generation)** com **Llama 3.2 (3B)** rodando no **Ollama**.
+Plataforma interativa de **atendimento de sintomas via IA**, que utiliza **RAG (Retrieval Augmented Generation)** com **Ollama (Llama 3.2 3B)** para gerar respostas contextualizadas e seguras.
 
-> ⚠️ Este projeto é apenas **educacional**. Não fornece diagnóstico médico.
+> ⚠️ Projeto de caráter **educacional**. Não realiza diagnósticos médicos reais.
 
 ---
 
@@ -23,62 +24,127 @@ cp frontend/.env.example frontend/.env
 docker compose up --build
 ```
 
-👉 O navegador deve ser aberto em: **http://localhost:5173**
+👉 Acesse no navegador: **http://localhost:5173**
 
 ---
 
 ## 📚 Funcionalidades
 
-### 💬 Chat
-- Conversa em tempo real (WebSocket)
-- Memória persistida no Redis
-- Sugestões de **produtos** e **ações**
-- Detecção de **red flags**
-- Exibição de **fontes consultadas**
-- Botão **Resetar conversa**
+### 💬 Bate-papo com Agente Dinâmico
+- Comunicação em **tempo real** (streaming SSE)  
+- **Memória persistente** via Redis  
+- Seleção dinâmica de **agentes** (ex.: saúde, nutrição, bem-estar)  
+- Respostas personalizadas com base no agente selecionado  
+- Detecção de termos críticos (“red flags”)  
+- Sugestões automáticas de **ações** e **produtos**
+
+### 🧩 CRUD de Agentes
+- Criação, edição, listagem e exclusão de agentes  
+- Configuração de parâmetros (modelo, provider, descrição, status)  
+- Integração direta com o chat dinâmico  
+- Persistência via FastAPI + SQLAlchemy + Postgres  
+
+---
+
+## 🧠 Próximas Features
 
 ### 📊 Dashboard
-- Perguntas mais feitas
-- Produtos mais sugeridos
-- Tempo médio de resposta
-- Quantidade de erros
-- Custos de transação
-- Gráficos com **Chart.js** (barras + linhas)
+- Indicadores de conversas, agentes e tempo de resposta  
+- Análise de engajamento e custo por interação  
+- Visualizações com **Chart.js** (linhas, barras e radar)
 
-### 📄 Receita Médica
-- Upload de imagem/PDF da receita
-- OCR com **Tesseract**
-- Explicação dos medicamentos prescritos
-- Sugestão de próximos passos (cuidados, onde comprar)
+### 🧾 Scanner de Receita Médica
+- Upload de imagens/PDFs de receitas  
+- OCR com **Tesseract**  
+- Interpretação dos medicamentos prescritos  
+- Sugestões de cuidados e locais de compra  
+
+---
+
+## 🧱 Arquitetura do Projeto
+
+```
+              ┌──────────────────┐
+              │     Frontend     │
+              │  (Vue + Vite)    │
+              └──────┬───────────┘
+                     │
+     HTTP / SSE      │
+                     ▼
+              ┌──────────────────┐
+              │     FastAPI      │
+              │  (Chat + CRUD)   │
+              └──────┬───────────┘
+        ┌────────────┼───────────────┐
+        ▼            ▼               ▼
+   ┌────────┐   ┌──────────┐   ┌──────────┐
+   │ Redis  │   │ ChromaDB │   │ Postgres │
+   └────────┘   └──────────┘   └──────────┘
+                     │
+                     ▼
+              ┌──────────────────┐
+              │     Ollama       │
+              │ (Llama 3.2 3B)   │
+              └──────────────────┘
+```
+
+---
+
+## 📁 Estrutura de Pastas
+
+```
+symptom-chat/
+├── api/                      # Backend FastAPI
+│   ├── app/                  # Código principal (models, services, routes)
+│   ├── alembic/              # Migrations
+│   ├── requirements.txt
+│   ├── Dockerfile
+│   └── .env.example
+│
+├── frontend/                 # Aplicação Vue 3
+│   ├── src/                  # Componentes, views e store
+│   ├── public/
+│   ├── Dockerfile
+│   └── .env.example
+│
+├── ollama/                   # Configuração do servidor Ollama
+│   ├── Dockerfile
+│   └── entrypoint.sh
+│
+├── docker-compose.yml        # Orquestração dos serviços
+├── README.md
+└── LICENSE
+```
 
 ---
 
 ## 🛠️ Stack
 
-- **Backend:** FastAPI + LangChain + Redis + ChromaDB  
-- **Frontend:** Vue 3 + Vite + Tailwind + Chart.js  
-- **LLM:** Ollama (Llama 3.2 3B, ~3.8GB)  
-- **Infra:** Docker Compose (WSL2/Linux)  
+- **Backend:** FastAPI • SQLAlchemy • Redis • ChromaDB  
+- **Frontend:** Vue 3 • Vite • Pinia • TailwindCSS  
+- **LLM / IA:** Ollama (Llama 3.2 3B)  
+- **Infra:** Docker Compose (WSL2 / Linux)  
 
 ---
 
-## 🗺 Melhorias Futuras
+## 🗺️ Melhorias Futuras
 
-- Exportar métricas em CSV/Excel  
+- Exportação de métricas (CSV/Excel)  
 - Integração com APIs de farmácias  
-- Alertas customizados por paciente  
-- Agendamento médico integrado  
+- Alertas e histórico por paciente  
+- Agendamento de atendimentos via IA  
 
 ---
 
 ## 📸 Screenshots (em breve)
 
-- Chat em tempo real  
-- Dashboard com métricas  
-- Receita médica analisada  
+- Interface do chat dinâmico  
+- CRUD de agentes  
+- Dashboard e análise de receitas médicas  
 
 ---
 
 ## ✨ Autor
 
-Desenvolvido por [**Ronaldo Amaral**](https://github.com/RonaldoAmaralDev) 🚀
+Desenvolvido por [**Ronaldo Amaral**](https://github.com/RonaldoAmaralDev) 🚀  
+Explorando IA generativa, RAG e agentes autônomos com foco em aplicações práticas e seguras.
